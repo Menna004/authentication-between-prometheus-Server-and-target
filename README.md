@@ -1,5 +1,5 @@
 ### ****The Node Exporter****
-
+### Encryption
 - Create a directory node_exporter
 
 `mkdir /etc/node_exporter`
@@ -37,17 +37,36 @@ WantedBy=multi-user.target`
 `sudo systemctl daemon-reload
 sudo systemctl restart node_exporter`
 
-- we see Node Metrics publishing on HTTPS
+### Authentication
 
-![hhh](https://github.com/Menna004/authentication-between-prometheus-Server-and-target/assets/88343123/6b6b5038-4b62-41fc-be6b-afc11dc1ffca)
+- Run thiscommand to create hash password
+  
+`htpasswd -nBC 12 "" | tr -d ':\n'`
+
+- update the config.yaml file to be :
+
+  `tls_server_config:
+  cert_file: node_exporter.crt
+  key_file: node_exporter.key
+basic_auth_users:
+  prometheus: $2y$12$EQmGdhTLBVUJOXOB.2ucS.Rw49JljvaeXiBHnvFlzeARzbdcUtVL2
+`
+- username is prometheus , hashed password is  $2y$12$EQmGdhTLBVUJOXOB.2ucS.Rw49JljvaeXiBHnvFlzeARzbdcUtVL2
+
+ - Restart the node_exporter
+
+    `sudo systemctl restart node_exporter
+`
 
 ### ****Prometheus Server****
 
 - Copy the node_exporter.crt file from the node exporter to the Prometheus server at /etc/prometheus
 
-- Update Prometheus configuration file as below:
+- Update Prometheus configuration file ,add user name and password in plain text as below:
+  
+![{F81F6F3D-2B02-4DBB-AFCF-250CE9C87C37} png](https://github.com/Menna004/authentication-between-prometheus-Server-and-target/assets/88343123/7d5db078-f691-4621-b13c-05a9baafd10b)
 
-![{55FE0FD3-4B41-4A92-868B-3713BF71FAF9} png](https://github.com/Menna004/authentication-between-prometheus-Server-and-target/assets/88343123/7c4e7f22-9a8a-40e7-8f88-e58c4bfb82f6)
+
 - Now you can restart the Prometheus 
 
 - we see that the Node_Exporter is UP 
