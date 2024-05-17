@@ -39,7 +39,7 @@ sudo systemctl restart node_exporter`
 
 ### Authentication
 
-- Run thiscommand to create hash password
+- Run this command to create hash password
   
 `htpasswd -nBC 12 "" | tr -d ':\n'`
 
